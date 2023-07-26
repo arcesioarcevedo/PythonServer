@@ -1,0 +1,100 @@
+CREATE TABLE dispensaries (
+  id int AUTO_INCREMENT,
+  Name varchar(255) NOT NULL,
+  Type text DEFAULT NULL,
+  Tag text DEFAULT NULL,
+  logoImage text DEFAULT NULL,
+  description text NOT NULL,
+  Address varchar(255) DEFAULT NULL,
+  Address2 text DEFAULT NULL,
+  City text DEFAULT NULL,
+  State text DEFAULT NULL,
+  Country text DEFAULT NULL,
+  Zip text DEFAULT NULL,
+  Longitude float(10,4) DEFAULT NULL,
+  Latitude float(10,4) DEFAULT NULL,
+  point geometry DEFAULT NULL,
+  Google_Ratings float(10,4) DEFAULT NULL,
+  Phone varchar(255) DEFAULT NULL,
+  Website text DEFAULT NULL,
+  Email varchar(255) DEFAULT NULL,
+  Source varchar(255) NOT NULL,
+  google_map_links text DEFAULT NULL,
+  timings text DEFAULT NULL,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL,
+  PRIMARY KEY (id)
+) 
+
+CREATE TABLE Products_info (
+  id int AUTO_INCREMENT,
+  dsp_id int(9) unsigned NOT NULL,
+  img_url text DEFAULT NULL,
+  product_Name varchar(255) NOT NULL,
+  Brand_Manufacturer text DEFAULT NULL,
+  description text DEFAULT NULL,
+  Strain varchar(255) DEFAULT NULL,
+  terps text DEFAULT NULL,
+  THC float(10,4) DEFAULT NULL,
+  CBD float(10,4) DEFAULT NULL,
+  Amount varchar(255) DEFAULT NULL,
+  Weight varchar(255) DEFAULT NULL,
+  Unit text DEFAULT NULL,
+  Price float(10,4) NOT NULL,
+  Price_gm float(10,4) DEFAULT NULL,
+  Category varchar(255) NOT NULL,
+  Business_Name varchar(255) DEFAULT NULL,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL,
+  PRIMARY KEY (id)
+) 
+
+CREATE TABLE logs_info (
+  id int AUTO_INCREMENT,
+  log_data text,
+  source text,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL,
+  PRIMARY KEY (id)
+) 
+
+
+CREATE TABLE crawlers_info (
+  id int AUTO_INCREMENT,
+  crawler_name text DEFAULT NULL,
+  crawler_discreption varchar(255) NOT NULL,
+  location text,
+  frequency text ,
+  last_run datetime,
+  next_run datetime,
+  runtime varchar(255) DEFAULT 0,
+  runstatus varchar(255) DEFAULT False,
+  status varchar(255) DEFAULT False,
+  records float(10,4) DEFAULT 0,
+  total_runs float(10,4) DEFAULT 0,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL,
+  PRIMARY KEY (id)
+) 
+
+CREATE TABLE strains (
+  id int AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  description text,
+  effects text,
+  flavors text,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL,
+  PRIMARY KEY (id)
+) 
+
+
+
+ALTER TABLE Potsaver_prod.Products_info ADD CONSTRAINT Products_info_UN UNIQUE KEY (dsp_id,product_Name,Strain,Price,Category);
+
+ALTER TABLE Potsaver_prod.dispensaries ADD CONSTRAINT dispensaries_UN UNIQUE KEY (Name,Address,Longitude,Latitude,Source);
+
+ALTER TABLE `dispensaries` CHANGE `geomtric` `point` geometry DEFAULT NULL
+2:18
+Also, I updated it's data with the data from both columns latitude & longitude
+UPDATE `dispensaries` SET `point` = ST_GeomFromText(CONCAT('POINT(', `Longitude`, ' ', `Latitude`, ')')) WHERE `point` IS NULL
